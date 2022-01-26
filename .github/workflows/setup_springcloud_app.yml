@@ -1,0 +1,19 @@
+on: workflow_dispatch
+name: Setup Spring Cloud Service
+jobs:
+  delete-microservice:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@main
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Delete Microservice
+      uses: Azure/cli@v1
+      with:
+        inlineScript: |
+          az spring-cloud app create --name hello-springcloud --resource-group ${{ RESOURCE_GROUP_NAME }} --service ${{ SPRINGCLOUD_SERVICE }}
