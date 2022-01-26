@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "springCloudInstanceName": {
+        "value": "oa-spring-cloud-dev"
+      },
+      "appInsightsName": {
+        "value": "oa-spring-cloud-dev"
+      },
+      "laWorkspaceResourceId": {
+        "value": " /subscriptions/<your subscription>/resourcegroups/<your log analytics resource group>/providers/Microsoft.OperationalInsights/workspaces/<your log analytics workspace name>"
+      },
+       "springCloudAppSubnetID": {
+        "value": "oa-spring-cloud-dev"
+      },
+   }
+}
