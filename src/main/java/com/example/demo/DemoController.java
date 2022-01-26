@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoController {
 
-    @GetMapping("/hello")
+    @GetMapping("/demo")
     public String hello() {
-        return "CI-CD demo about Azure Spring Cloud and GitHub Actions\n";
+        return "CI-CD demo about Azure Spring Cloud and GitHub Actions V1.0\n";
     }
 }
