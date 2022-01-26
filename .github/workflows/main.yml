@@ -1,0 +1,28 @@
+name: Buid and Deploy Microservice to AzureSpringCloud
+on: workflow_dispatch
+env:
+  ASC_PACKAGE_PATH: ${{ github.workspace }}
+  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION_NAME }}
+
+jobs:
+  deploy_to_production:
+    runs-on: ubuntu-latest
+    name: Deploy to AzureSpringCloud
+    steps:
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: deploy to production step with soruce code
+        uses: azure/spring-cloud-deploy@v1
+        with:
+          azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+          action: deploy
+          service-name: ${{ secrets.SPRINGCLOUD_SERVICE }}
+          app-name: hello_springcloud
+          use-staging-deployment: false
+          package: ${{ env.ASC_PACKAGE_PATH }}
