@@ -1,139 +1,178 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "springCloudInstanceName": {
-            "type": "string",
-            "metadata": {
-                "description": "The instance name of the Azure Spring Cloud resource"
-            }
-        },
-        "appInsightsName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the Application Insights instance for Azure Spring Cloud"
-            }
-        },
-        "laWorkspaceResourceId": {
-            "type": "string",
-            "metadata": {
-                "description": "The resource ID of the existing Log Analytics workspace. This will be used for both diagnostics logs and Application Insights"
-            }
-        },
-        "springCloudAppSubnetID": {
-            "type": "string",
-            "metadata": {
-                "description": "The resourceID of the Azure Spring Cloud App Subnet"
-            }
-        },
-        "springCloudRuntimeSubnetID": {
-            "type": "string",
-            "metadata": {
-                "description": "The resourceID of the Azure Spring Cloud Runtime Subnet"
-            }
-        },
-        "springCloudServiceCidrs": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/16,10.2.0.0/16,10.3.0.1/16",
-            "metadata": {
-                "description": "Comma-separated list of IP address ranges in CIDR format. The IP ranges are reserved to host underlying Azure Spring Cloud infrastructure, which should be 3 at least /16 unused IP ranges, must not overlap with any Subnet IP ranges"
-            }
-            
-        },
-        
-        "tags": {
-            "type": "object",
-            "metadata": {
-                "description": "The tags that will be associated to the Resources"
-            },
-            "defaultValue": {
-                "environment": "lab"
-            }
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceName": {
+      "type": "string"
     },
-    "variables": {
-        "springCloudSkuName": "S0",
-        "springCloudSkuTier": "Standard",        
-        "location": "[resourceGroup().location]",
-        "diagApiVersion": "2017-05-01-preview",
-        "springApiVersion": "2020-07-01",
-        "appInsightsApiVersion": "2020-02-02-preview"
-             
-               
+    "app1": {
+      "type": "string",
+      "defaultValue": "gateway"
     },
-    "resources": [
-        {
-            "type": "Microsoft.Insights/components",
-            "name": "[parameters('appInsightsName')]",
-            "apiVersion": "[variables('appInsightsApiVersion')]",
-            "location": "[variables('location')]",
-            "tags": "[parameters('tags')]",
-            "properties": {
-                "Application_Type": "web",
-                "ApplicationId": "[parameters('appInsightsName')]",
-                "Flow_Type": "Bluefield",
-                "Request_Source": "rest",
-                "WorkspaceResourceId": "[parameters('laWorkspaceResourceId')]"
-            }
-        },
-        {
-            "apiVersion": "[variables('springApiVersion')]",
-            "name": "[parameters('springCloudInstanceName')]",
-            "location": "[variables('location')]",
-            "tags": "[parameters('tags')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
-                
-            ],
-            "type": "Microsoft.AppPlatform/Spring",
-            "sku": {
-                "name": "[variables('springCloudSkuName')]",
-                "tier": "[variables('springCloudSkuTier')]"
-            },
-            "properties": {
-                "networkProfile": {
-                    "serviceCidr": "[parameters('springCloudServiceCidrs')]",
-                    "serviceRuntimeSubnetId": "[parameters('springCloudRuntimeSubnetID')]",
-                    "appSubnetId": "[parameters('springCloudAppSubnetID')]"
-                }
-            }
-        },
-        {
-            "apiVersion": "[variables('springApiVersion')]",
-            "name": "[concat(parameters('springCloudInstanceName'), '/default')]",
-            "type": "Microsoft.AppPlatform/Spring/monitoringSettings",
-            "properties": {
-                "traceEnabled": true,
-                "appInsightsInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), variables('appInsightsApiVersion')).InstrumentationKey]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.AppPlatform/Spring/', parameters('springCloudInstanceName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.AppPlatform/Spring/providers/diagnosticSettings",
-            "name": "[concat(parameters('springCloudInstanceName'), '/Microsoft.Insights/monitoring')]",
-            "dependsOn": [  
-                "[resourceId('Microsoft.AppPlatform/Spring/', parameters('springCloudInstanceName'))]"       
-            ],
-            "apiVersion": "[variables('diagApiVersion')]",
-            "properties": {
-                "name": "monitoring",
-                "workspaceId": "[parameters('laWorkspaceResourceId')]",
-                "logs": [
-                    {
-                        "category": "ApplicationConsole",
-                        "enabled": true,
-                        "retentionPolicy": {
-                            "days": 30,
-                            "enabled": false
-                        }
-                    }
-                ]
-            }
-        }
-               
-    ],
-    "outputs": {
+    "app2": {
+      "type": "string",
+      "defaultValue": "account-service"
+    },
+    "app3": {
+      "type": "string",
+      "defaultValue": "auth-service"
+    },
+    "location": {
+      "type": "string",
+      "allowedValues": [ "westeurope", "eastus", "westus2", "southeastasia", "centralus", "australiaeast", "uksouth", "northeurope", "southcentralus", "eastus2" ]
     }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.AppPlatform/Spring",
+      "apiVersion": "2020-07-01",
+      "name": "[parameters('serviceName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "S0",
+        "tier": "Standard"
+      },
+      "properties": {
+        "configServerProperties": {
+          "configServer": {
+            "gitProperty": {
+              "uri": "https://github.com/Azure-Samples/piggymetrics-config"
+            }
+          }
+        }
+      },
+      "resources": [
+        {
+          "type": "apps",
+          "apiVersion": "2020-07-01",
+          "name": "[parameters('app1')]",
+          "properties": {
+            "public": true
+          },
+          "dependsOn": [
+            "[parameters('serviceName')]"
+          ],
+          "resources": [
+            {
+              "type": "deployments",
+              "apiVersion": "2020-07-01",
+              "name": "default",
+              "dependsOn": [
+                "[parameters('app1')]"
+              ],
+              "properties": {
+                "source": {
+                  "relativePath": "<default>",
+                  "type": "Jar"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "apps",
+          "apiVersion": "2020-07-01",
+          "name": "[parameters('app2')]",
+          "properties": {
+            "public": true
+          },
+          "dependsOn": [
+            "[parameters('serviceName')]"
+          ],
+          "resources": [
+            {
+              "type": "deployments",
+              "apiVersion": "2020-07-01",
+              "name": "default",
+              "dependsOn": [
+                "[parameters('app2')]"
+              ],
+              "properties": {
+                "source": {
+                  "relativePath": "<default>",
+                  "type": "Jar"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "apps",
+          "apiVersion": "2020-07-01",
+          "name": "[parameters('app3')]",
+          "properties": {
+            "public": false
+          },
+          "dependsOn": [
+            "[parameters('serviceName')]"
+          ],
+          "resources": [
+            {
+              "type": "deployments",
+              "apiVersion": "2020-07-01",
+              "name": "default",
+              "dependsOn": [
+                "[parameters('app3')]"
+              ],
+              "properties": {
+                "source": {
+                  "relativePath": "<default>",
+                  "type": "Jar"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-07-01",
+      "name": "setActiveDeployment",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppPlatform/Spring/apps/deployments', parameters('serviceName'), parameters('app1'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/apps/deployments', parameters('serviceName'), parameters('app2'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/apps/deployments', parameters('serviceName'), parameters('app3'), 'default')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "parameters": {},
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.AppPlatform/Spring/apps",
+              "apiVersion": "2020-07-01",
+              "name": "[concat(parameters('serviceName'), '/', parameters('app1'))]",
+              "properties": {
+                "public": true,
+                "activeDeploymentName": "default"
+              }
+            },
+            {
+              "type": "Microsoft.AppPlatform/Spring/apps",
+              "apiVersion": "2020-07-01",
+              "name": "[concat(parameters('serviceName'), '/', parameters('app2'))]",
+              "properties": {
+                "public": false,
+                "activeDeploymentName": "default"
+              }
+            },
+            {
+              "type": "Microsoft.AppPlatform/Spring/apps",
+              "apiVersion": "2020-07-01",
+              "name": "[concat(parameters('serviceName'), '/', parameters('app3'))]",
+              "properties": {
+                "public": false,
+                "activeDeploymentName": "default"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
 }
