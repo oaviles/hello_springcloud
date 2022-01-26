@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "serviceName": {
-      "value": "my-01-springcloud-dev"
+      "value": "my-x-springcloud-dev"
     },
     "location": {
       "value": "eastus2"
