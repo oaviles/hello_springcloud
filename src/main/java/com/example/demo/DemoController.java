@@ -8,6 +8,6 @@ public class DemoController {
 
     @GetMapping("/demo")
     public String hello() {
-        return "CI-CD demo about Azure Spring Cloud and GitHub Actions V1.0\n";
+        return "CI-CD demo about Azure Spring Cloud and GitHub Actions V1.5\n";
     }
 }
