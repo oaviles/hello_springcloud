@@ -16,4 +16,5 @@ jobs:
       uses: Azure/cli@v1
       with:
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az spring-cloud app create --name hello-springcloud --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --service ${{ secrets.SPRINGCLOUD_SERVICE }}
