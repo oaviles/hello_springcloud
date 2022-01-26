@@ -23,6 +23,6 @@ jobs:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: deploy
           service-name: ${{ secrets.SPRINGCLOUD_SERVICE }}
-          app-name: hello_springcloud
+          app-name: hello-springcloud
           use-staging-deployment: false
           package: ${{ env.ASC_PACKAGE_PATH }}
