@@ -16,4 +16,4 @@ jobs:
       uses: Azure/cli@v1
       with:
         inlineScript: |
-          az spring-cloud app create --name hello-springcloud --resource-group ${{ RESOURCE_GROUP_NAME }} --service ${{ SPRINGCLOUD_SERVICE }}
+          az spring-cloud app create --name hello-springcloud --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --service ${{ secrets.SPRINGCLOUD_SERVICE }}
