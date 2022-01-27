@@ -7,4 +7,6 @@ Azure Spring Cloud, reference architecture:
 
 ![](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/blue-green-spring/media/blue-green-deployment.png)
 
+[Spring Boot Reference](https://spring.io/projects/spring-boot)
+
 > Note: This page is getting updated so make sure to check regularly for new resources.
