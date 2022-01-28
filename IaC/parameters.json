@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "serviceName": {
-      "value": oa-spring-cloud-workshop"
+      "value": "oa-spring-cloud-workshop"
     },
     "location": {
       "value": "eastus2"
