@@ -1,5 +1,5 @@
 on: workflow_dispatch
-name: Deploy Azure Spring Cloud Service
+name: 1 Deploy Azure Spring Cloud Service
 jobs:
   arm-template-deploy:
     runs-on: ubuntu-latest
