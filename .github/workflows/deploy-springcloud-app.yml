@@ -1,4 +1,4 @@
-name: Buid and Deploy Microservice to AzureSpringCloud
+name: 3 Buid and Deploy Microservice to AzureSpringCloud
 on: workflow_dispatch
 env:
   ASC_PACKAGE_PATH: ${{ github.workspace }}
