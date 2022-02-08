@@ -1,5 +1,5 @@
 on: workflow_dispatch
-name: Setup Spring Cloud App
+name: 2 Setup Spring Cloud App
 jobs:
   setup-springcloud-app:
     runs-on: ubuntu-latest
