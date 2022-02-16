@@ -11,7 +11,7 @@ Azure Spring Cloud, reference architecture:
 [Spring Boot Reference](https://spring.io/projects/spring-boot)
 
 ### Check More DevSquad Projects
-* [DevSquad Main Project](https://github.com/oaviles/DevSquad)
+* [DevSquad Main Project](https://github.com/microsoft/fast-prototyping)
 
 > Note: This page is getting updated so make sure to check regularly for new resources.
 
