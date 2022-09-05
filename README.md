@@ -12,6 +12,7 @@ Azure Spring Cloud, reference architecture:
 
 ### Check More DevSquad Projects
 * [DevSquad Main Project](https://github.com/microsoft/fast-prototyping)
+* [PoC: Java on Azure](https://github.com/oaviles/hello_java)
 
 > Note: This page is getting updated so make sure to check regularly for new resources.
 
